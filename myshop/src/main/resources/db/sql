@@ -1,0 +1,12 @@
+INSERT INTO continent values('Africa')
+INSERT INTO continent values('Europe')
+INSERT INTO continent values('Asia')
+INSERT INTO continent values('North America')
+INSERT INTO continent values('South America')
+INSERT INTO continent values('Australia')
+INSERT INTO continent values('Antarctica')
+
+INSERT INTO member VALUES('admin@admin.com','1234','admin','010-1111-2222','admin')
+
+
+ALTER TABLE product ALTER COLUMN price integer
