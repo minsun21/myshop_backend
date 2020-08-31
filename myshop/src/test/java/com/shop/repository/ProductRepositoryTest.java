@@ -36,6 +36,8 @@ public class ProductRepositoryTest {
 	MemberRepository memberRepository;
 	@Autowired
 	ProductRepository productRepository;
+	@Autowired
+	ImageRepository imageRepository;
 
 	@Test
 	public void getAllContinents() {
@@ -113,12 +115,11 @@ public class ProductRepositoryTest {
 		int index3 = filePath13.lastIndexOf(".");
 		String ext3 = filePath13.substring(index3 + 1).toUpperCase();
 		Image image3 = Image.builder().path(filePath13).type(IMAGE_TYPE.valueOf(ext3)).build();
-
 		Product product = Product.builder().member(member).title("title").description("desc").price(10000)
 				.continent(continent).build();
-		product.addImage(image);
-		product.addImage(image2);
-		product.addImage(image3);
+		product.addImage(imageRepository.save(image));
+		product.addImage(imageRepository.save(image2));
+		product.addImage(imageRepository.save(image3));
 		productRepository.save(product);
 		
 		Product searchProduct = productRepository.findById((long)1).orElseThrow(() -> new Exception("없음"));

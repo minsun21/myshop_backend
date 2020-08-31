@@ -10,3 +10,11 @@ INSERT INTO member VALUES('admin@admin.com','1234','admin','010-1111-2222','admi
 
 
 ALTER TABLE product ALTER COLUMN price integer
+
+
+CREATE TABLE image(
+image_id bigint,
+type varchar(10) NOT NULL, 
+path varchar(50) not null,
+product_id bigint not null,
+CONSTRAINT PK_image_id PRIMARY KEY(image_id))
