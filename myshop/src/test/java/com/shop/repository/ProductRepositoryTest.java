@@ -95,12 +95,22 @@ public class ProductRepositoryTest {
 	}
 	
 	@Test
+	public void upload_image() {
+		String filePath1 = IMAGE_FOLDER + "product/99872A335A1AF37C31.jpg";
+		int index = filePath1.lastIndexOf(".");
+		String ext = filePath1.substring(index + 1).toUpperCase();
+		Image image = Image.builder().path(filePath1).type(IMAGE_TYPE.valueOf(ext)).build();
+		imageRepository.save(image);
+	}
+	
+	@Test
+	@Rollback(false)
 	public void upload_product() throws Exception {
 		// 상품 등록 하기
 
-		Member member = memberRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
-		Continent continent = continentsRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
-		System.out.println(continent.getName());
+//		Member member = memberRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
+//		Continent continent = continentsRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
+//		System.out.println(continent.getName());
 //		 new image들
 		String filePath1 = IMAGE_FOLDER + "product/99872A335A1AF37C31.jpg";
 		String filePath12 = IMAGE_FOLDER + "product/2020051403217_0.png";
@@ -115,11 +125,14 @@ public class ProductRepositoryTest {
 		int index3 = filePath13.lastIndexOf(".");
 		String ext3 = filePath13.substring(index3 + 1).toUpperCase();
 		Image image3 = Image.builder().path(filePath13).type(IMAGE_TYPE.valueOf(ext3)).build();
-		Product product = Product.builder().member(member).title("title").description("desc").price(10000)
-				.continent(continent).build();
-		product.addImage(imageRepository.save(image));
-		product.addImage(imageRepository.save(image2));
-		product.addImage(imageRepository.save(image3));
+		Product product = Product.builder().member(null).title("title").description("desc").price(10000)
+				.continent(null).build();
+//		product.addImage(imageRepository.save(image));
+//		product.addImage(imageRepository.save(image2));
+//		product.addImage(imageRepository.save(image3));
+		product.addImage(image);
+		product.addImage(image2);
+		product.addImage(image3);
 		productRepository.save(product);
 		
 		Product searchProduct = productRepository.findById((long)1).orElseThrow(() -> new Exception("없음"));

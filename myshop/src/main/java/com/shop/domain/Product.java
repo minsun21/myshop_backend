@@ -1,5 +1,6 @@
 package com.shop.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,38 +18,41 @@ import javax.persistence.Table;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.ToString;
 
-@Table(name="product")
+@Table(name = "product")
 @Builder
 @Getter
 @Entity
 public class Product {
-	@Column(name="product_id")
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "product_id")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productId;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="member_id")
+	@JoinColumn(name = "member_id")
 	private Member member;
-	
+
 	private String title;
-	
+
 	private String description;
-	
+
 	private int price;
-	
+
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	@Singular
 	private List<Image> images;
-	
+
 	private int sold;
-	
+
 	private int views;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="continent_id")
+	@JoinColumn(name = "continent_id")
 	private Continent continent;
-	
+
 	public void addImage(Image image) {
 		images.add(image);
 		image.setProduct(this);
