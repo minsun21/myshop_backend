@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -38,6 +39,19 @@ public class ProductRepositoryTest {
 	ProductRepository productRepository;
 	@Autowired
 	ImageRepository imageRepository;
+
+	@Test
+	public void insertAllContinents() {
+		Continent con1 = new Continent("Africa");
+		Continent con12 = new Continent("Europe");
+		Continent con13 = new Continent("Asia");
+		Continent con14 = new Continent("North America");
+		Continent con15 = new Continent("South America");
+		Continent con16 = new Continent("Australia");
+		Continent con17 = new Continent("Antarctica");
+		List<Continent> customers = Arrays.asList(con1, con12, con13, con14, con15, con16, con17);
+		continentsRepository.saveAll(customers);
+	}
 
 	@Test
 	public void getAllContinents() {
@@ -87,13 +101,12 @@ public class ProductRepositoryTest {
 		Assertions.assertThat(member.getEmail()).isEqualTo("admin@admin.com");
 	}
 
-
 	@Test
 	public void find_continent() throws Exception {
 		Continent continent = continentsRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
 		Assertions.assertThat(continent.getName()).isEqualTo("Africa");
 	}
-	
+
 	@Test
 	public void upload_image() {
 		String filePath1 = IMAGE_FOLDER + "product/99872A335A1AF37C31.jpg";
@@ -102,7 +115,7 @@ public class ProductRepositoryTest {
 		Image image = Image.builder().path(filePath1).type(IMAGE_TYPE.valueOf(ext)).build();
 		imageRepository.save(image);
 	}
-	
+
 	@Test
 	@Rollback(false)
 	public void upload_product() throws Exception {
@@ -125,18 +138,21 @@ public class ProductRepositoryTest {
 		int index3 = filePath13.lastIndexOf(".");
 		String ext3 = filePath13.substring(index3 + 1).toUpperCase();
 		Image image3 = Image.builder().path(filePath13).type(IMAGE_TYPE.valueOf(ext3)).build();
-		Product product = Product.builder().member(null).title("title").description("desc").price(10000)
-				.continent(null).build();
+		Product product = Product.builder().member(null).title("title").description("desc").price(10000).continent(null)
+				.build();
 //		product.addImage(imageRepository.save(image));
 //		product.addImage(imageRepository.save(image2));
 //		product.addImage(imageRepository.save(image3));
-		product.addImage(image);
-		product.addImage(image2);
-		product.addImage(image3);
-		productRepository.save(product);
-		
-		Product searchProduct = productRepository.findById((long)1).orElseThrow(() -> new Exception("없음"));
+		try {
+			product.addImage(image);
+			product.addImage(image2);
+			product.addImage(image3);
+			productRepository.save(product);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Product searchProduct = productRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
 		System.out.println(searchProduct.toString());
-		
+
 	}
 }

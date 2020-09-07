@@ -10,13 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(name = "member")
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 public class Member {
 	@Column(name = "member_id")

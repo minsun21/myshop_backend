@@ -22,7 +22,6 @@ import lombok.Singular;
 import lombok.ToString;
 
 @Table(name = "product")
-@Builder
 @Getter
 @Entity
 public class Product {
@@ -42,8 +41,7 @@ public class Product {
 	private int price;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	@Singular
-	private List<Image> images;
+	private List<Image> images = new ArrayList<Image>();
 
 	private int sold;
 
@@ -57,4 +55,17 @@ public class Product {
 		images.add(image);
 		image.setProduct(this);
 	}
+	@Builder
+	public Product(Long productId, Member member, String title, String description, int price, int sold, int views,
+			Continent continent) {
+		this.productId = productId;
+		this.member = member;
+		this.title = title;
+		this.description = description;
+		this.price = price;
+		this.sold = sold;
+		this.views = views;
+		this.continent = continent;
+	}
+	
 }

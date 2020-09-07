@@ -10,13 +10,18 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@NoArgsConstructor
 @Getter
 @Table(name ="continent")
 @Entity
 public class Continent {
+	
+	public Continent(String name) {
+		this.name = name;
+	}
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="continent_id")
