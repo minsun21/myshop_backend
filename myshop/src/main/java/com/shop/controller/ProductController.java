@@ -2,14 +2,11 @@ package com.shop.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -56,8 +53,8 @@ public class ProductController {
 		Continent con17 = new Continent("Antarctica");
 		List<Continent> customers = Arrays.asList(con1, con12, con13, con14, con15, con16, con17);
 		continentsRepository.saveAll(customers);
-		List<ContinentsDto> resultList = continentsRepository.findAll().stream()
-				.map(m -> new ContinentsDto(m.getContinentId(), m.getName())).collect(Collectors.toList());
+		List<ContinentsDto> resultList = continentsRepository.findAll().stream().map(ContinentsDto::new)
+				.collect(Collectors.toList());
 		return resultList;
 	}
 
@@ -78,6 +75,33 @@ public class ProductController {
 		return result;
 	}
 
+	@PostMapping("/products")
+	public Map<String, String> getProducts() {
+		// p -> new ProductDto(p)
+		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
+				.collect(Collectors.toList());
+		return null;
+	}
+
+	@Data
+	class ProductDto {
+		private String title;
+		private String description;
+		private int price;
+		private int sold;
+		private int views;
+		private Continent continent;
+
+		public ProductDto(Product product) {
+			this.title = product.getTitle();
+			this.description = product.getDescription();
+			this.price = product.getPrice();
+			this.sold = product.getSold();
+			this.views = product.getViews();
+			this.continent = product.getContinent();
+		}
+	}
+
 	@PostMapping(value = "/upload")
 	public Map<String, String> uploadProduct(@RequestBody Map<String, Object> productBody) throws Exception {
 		Map<String, String> result = new HashMap<String, String>();
@@ -92,7 +116,7 @@ public class ProductController {
 //		}
 		// [product/4876484354132.jpg, product/2020051403217_0.png,
 		// product/99872A335A1AF37C31.jpg]
-		
+
 		int price = Integer.parseInt((String) productBody.get("price"));
 		String con = String.valueOf(productBody.get("continent"));
 		Continent continent = continentsRepository.findById(Long.valueOf(con)).orElseThrow(() -> new Exception("없음"));
@@ -118,23 +142,18 @@ public class ProductController {
 	}
 
 	@Data
-	@AllArgsConstructor
 	class Result<T> {
 		private T data;
 	}
 
 	@Data
-	@AllArgsConstructor
 	class ContinentsDto {
 		private Long continentId;
 		private String name;
-	}
 
-	@Data
-	@AllArgsConstructor
-	class ProductDto {
-		private MultipartFile file;
-		private String desc;
-		private String name;
+		public ContinentsDto(Continent continent) {
+			this.continentId = continent.getContinentId();
+			this.name = continent.getName();
+		}
 	}
 }
