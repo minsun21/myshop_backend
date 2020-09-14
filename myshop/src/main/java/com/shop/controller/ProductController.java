@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,15 +46,15 @@ public class ProductController {
 
 	@GetMapping(value = "/continents")
 	public List<ContinentsDto> getContinentsList() {
-		Continent con1 = new Continent("Africa");
-		Continent con12 = new Continent("Europe");
-		Continent con13 = new Continent("Asia");
-		Continent con14 = new Continent("North America");
-		Continent con15 = new Continent("South America");
-		Continent con16 = new Continent("Australia");
-		Continent con17 = new Continent("Antarctica");
-		List<Continent> customers = Arrays.asList(con1, con12, con13, con14, con15, con16, con17);
-		continentsRepository.saveAll(customers);
+//		Continent con1 = new Continent("Africa");
+//		Continent con12 = new Continent("Europe");
+//		Continent con13 = new Continent("Asia");
+//		Continent con14 = new Continent("North America");
+//		Continent con15 = new Continent("South America");
+//		Continent con16 = new Continent("Australia");
+//		Continent con17 = new Continent("Antarctica");
+//		List<Continent> customers = Arrays.asList(con1, con12, con13, con14, con15, con16, con17);
+//		continentsRepository.saveAll(customers);
 		List<ContinentsDto> resultList = continentsRepository.findAll().stream().map(ContinentsDto::new)
 				.collect(Collectors.toList());
 		return resultList;
@@ -89,7 +91,7 @@ public class ProductController {
 		private int price;
 		private int sold;
 		private int views;
-		private Continent continent;
+		private String continent;
 		private List<String> imagePathList = new ArrayList<String>();
 
 		public ProductDto(Product product) {
@@ -98,13 +100,14 @@ public class ProductController {
 			this.price = product.getPrice();
 			this.sold = product.getSold();
 			this.views = product.getViews();
-			this.continent = product.getContinent();
+			this.continent = product.getContinent().getName();
 			for(Image image : product.getImages()) {
 				imagePathList.add(image.getPath());
 			}
 		}
 	}
 
+	@Transactional
 	@PostMapping(value = "/upload")
 	public Map<String, String> uploadProduct(@RequestBody Map<String, Object> productBody) throws Exception {
 		Map<String, String> result = new HashMap<String, String>();

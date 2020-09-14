@@ -42,7 +42,7 @@ public class Product {
 	private int price;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Image> images = new ArrayList<Image>();
+	private List<Image> images = new ArrayList<>();
 
 	private int sold;
 
