@@ -16,11 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Singular;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product")
 @Getter
 @Entity
@@ -53,8 +54,9 @@ public class Product {
 
 	public void addImage(Image image) {
 		images.add(image);
-		image.setProduct(this);
+		image.insertProduct(this);
 	}
+	
 	@Builder
 	public Product(Long productId, Member member, String title, String description, int price, int sold, int views,
 			Continent continent) {

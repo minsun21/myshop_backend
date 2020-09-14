@@ -28,8 +28,8 @@ import com.shop.repository.ContinentsRepository;
 import com.shop.repository.MemberRepository;
 import com.shop.repository.ProductRepository;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -76,11 +76,10 @@ public class ProductController {
 	}
 
 	@PostMapping("/products")
-	public Map<String, String> getProducts() {
-		// p -> new ProductDto(p)
+	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
 		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
 				.collect(Collectors.toList());
-		return null;
+		return productList;
 	}
 
 	@Data
@@ -91,6 +90,7 @@ public class ProductController {
 		private int sold;
 		private int views;
 		private Continent continent;
+		private List<String> imagePathList = new ArrayList<String>();
 
 		public ProductDto(Product product) {
 			this.title = product.getTitle();
@@ -99,6 +99,9 @@ public class ProductController {
 			this.sold = product.getSold();
 			this.views = product.getViews();
 			this.continent = product.getContinent();
+			for(Image image : product.getImages()) {
+				imagePathList.add(image.getPath());
+			}
 		}
 	}
 
@@ -130,6 +133,7 @@ public class ProductController {
 			product.addImage((getImageInfo(imagePath)));
 		}
 		productRepository.save(product);
+	
 		result.put("result", "success");
 		return result;
 	}

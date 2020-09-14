@@ -18,3 +18,4 @@ type varchar(10) NOT NULL,
 path varchar(50) not null,
 product_id bigint not null,
 CONSTRAINT PK_image_id PRIMARY KEY(image_id))
+

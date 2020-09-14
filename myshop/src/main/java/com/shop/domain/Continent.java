@@ -9,13 +9,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+
 @Getter
 @Table(name ="continent")
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Continent {
 	
@@ -28,5 +33,9 @@ public class Continent {
 	private Long continentId;
 	
 	private String name;
+	@Builder
+	public void Continent() {
+		
+	}
 	
 }

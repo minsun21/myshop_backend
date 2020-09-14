@@ -1,9 +1,9 @@
 spring:
   profiles:
-    active: dev
+    active: prod
 ---
 spring:
-  profiles: prod
+  profiles: dev
   datasource:
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       username: infodba
