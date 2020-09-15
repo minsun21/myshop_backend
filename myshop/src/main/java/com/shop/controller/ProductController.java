@@ -3,7 +3,6 @@ package com.shop.controller;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,9 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +32,8 @@ import com.shop.repository.ContinentsRepository;
 import com.shop.repository.MemberRepository;
 import com.shop.repository.ProductRepository;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -78,11 +80,36 @@ public class ProductController {
 	}
 
 	@PostMapping("/products")
-	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
-		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
+	public Result<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
+		// limit:8. skip:0. 0번째부터 8개 가져와.
+		int skip = (int)conditionBody.get("skip");
+		// limit값이 있으면 limit. 없으면 20
+		// skip값이 있으면 skip. 없으면 0
+		int limit = (int) conditionBody.get("limit");
+		System.out.println(">>>>>>>>>>>"+skip);
+		System.out.println(">>>>>>>>>>>"+limit);
+		PageRequest pageRequest = PageRequest.of(skip, limit);
+		
+		Page<Product> page = productRepository.findAll(pageRequest);
+		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
 				.collect(Collectors.toList());
-		return productList;
+		System.out.println(">>>>>>>>>>>"+page.hasNext());
+		return new Result(productList,page.hasNext());
 	}
+//	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
+//		// limit:8. skip:0. 0번째부터 8개 가져와.
+//		int skip = (int)conditionBody.get("skip");
+//		// limit값이 있으면 limit. 없으면 20
+//		// skip값이 있으면 skip. 없으면 0
+//		int limit = (int) conditionBody.get("limit");
+//		
+//		PageRequest pageRequest = PageRequest.of(skip, limit);
+//		
+//		Page<Product> page = productRepository.findAll(pageRequest);
+//		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
+//				.collect(Collectors.toList());
+//		return productList;
+//	}
 
 	@Data
 	class ProductDto {
@@ -149,8 +176,10 @@ public class ProductController {
 	}
 
 	@Data
+	@AllArgsConstructor
 	class Result<T> {
-		private T data;
+		private T list;
+		private boolean hasNext;
 	}
 
 	@Data

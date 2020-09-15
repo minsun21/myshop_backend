@@ -1,7 +1,5 @@
 package com.shop.repository;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.util.ArrayList;
@@ -15,17 +13,16 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.shop.domain.Continent;
+import com.shop.domain.IMAGE_TYPE;
 import com.shop.domain.Image;
 import com.shop.domain.Member;
 import com.shop.domain.Product;
-
-import ch.qos.logback.classic.Logger;
-
-import com.shop.domain.IMAGE_TYPE;
 
 @Transactional
 @SpringBootTest
@@ -153,6 +150,19 @@ public class ProductRepositoryTest {
 		}
 		Product searchProduct = productRepository.findById((long) 1).orElseThrow(() -> new Exception("없음"));
 		System.out.println(searchProduct.toString());
+	}
 
+	@Test
+	public void Page() {
+		int skip = 0;
+		int limit = 5;
+		PageRequest pageRequest = PageRequest.of(skip, limit);
+
+		Page<Product> page = productRepository.findAll(pageRequest);
+//		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
+//				.collect(Collectors.toList());
+//		Page<ProductDto> productList = page.map(ProductDto::new);	
+//		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
+//				.collect(Collectors.toList());
 	}
 }
