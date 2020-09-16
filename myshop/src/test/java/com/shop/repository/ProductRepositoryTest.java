@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.domain.Continent;
 import com.shop.domain.IMAGE_TYPE;
 import com.shop.domain.Image;
@@ -165,4 +166,22 @@ public class ProductRepositoryTest {
 //		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
 //				.collect(Collectors.toList());
 	}
+	
+	@Test
+	public void findByContinent() {
+		int skip = 0;
+		int limit = 2;
+		PageRequest pageRequest = PageRequest.of(skip, limit);
+		Long continentId = (long) 1;
+		Continent continent = continentsRepository.findById(continentId).get();
+		Page<Product> pages= productRepository.findByContinent(continent, pageRequest);
+		Assertions.assertThat(pages.getSize()).isEqualTo(2);
+	}
+	
+	@Test
+	public void querydsl() {
+
+	}
+	
+	
 }

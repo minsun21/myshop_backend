@@ -79,6 +79,7 @@ public class ProductController {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@PostMapping("/products")
 	public Result<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
 		// limit:8. skip:0. 0번째부터 8개 가져와.
@@ -86,16 +87,14 @@ public class ProductController {
 		// limit값이 있으면 limit. 없으면 20
 		// skip값이 있으면 skip. 없으면 0
 		int limit = (int) conditionBody.get("limit");
-		System.out.println(">>>>>>>>>>>"+skip);
-		System.out.println(">>>>>>>>>>>"+limit);
 		PageRequest pageRequest = PageRequest.of(skip, limit);
 		
 		Page<Product> page = productRepository.findAll(pageRequest);
 		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
 				.collect(Collectors.toList());
-		System.out.println(">>>>>>>>>>>"+page.hasNext());
 		return new Result(productList,page.hasNext());
 	}
+	
 //	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
 //		// limit:8. skip:0. 0번째부터 8개 가져와.
 //		int skip = (int)conditionBody.get("skip");
