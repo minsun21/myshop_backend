@@ -89,23 +89,21 @@ public class ProductController {
 		int limit = (int) conditionBody.get("limit");
 		PageRequest pageRequest = PageRequest.of(skip, limit);
 		
-		Page<Product> page = productRepository.findAll(pageRequest);
-		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
-				.collect(Collectors.toList());
-		return new Result(productList,page.hasNext());
-	}
-	
-//	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
-//		// limit:8. skip:0. 0번째부터 8개 가져와.
-//		int skip = (int)conditionBody.get("skip");
-//		// limit값이 있으면 limit. 없으면 20
-//		// skip값이 있으면 skip. 없으면 0
-//		int limit = (int) conditionBody.get("limit");
-//		
-//		PageRequest pageRequest = PageRequest.of(skip, limit);
-//		
 //		Page<Product> page = productRepository.findAll(pageRequest);
 //		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
+//				.collect(Collectors.toList());
+		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
+				.collect(Collectors.toList());
+//		return new Result(productList,page.hasNext());
+		return new Result(productList,false);
+	}
+//	@PostMapping("/products")
+//	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
+//		int limit = (int) conditionBody.get("limit");
+//		System.out.println(conditionBody.get("filters"));
+//		List<Product> allProduct = productRepository.findAll();
+//		
+//		List<ProductDto> productList = allProduct.stream().map(ProductDto::new)
 //				.collect(Collectors.toList());
 //		return productList;
 //	}
