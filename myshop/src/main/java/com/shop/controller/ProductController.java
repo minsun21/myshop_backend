@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -78,10 +80,15 @@ public class ProductController {
 		result.put("path", path);
 		return result;
 	}
+	@GetMapping(value = "/products_by_id")
+	public ProductDto getProductById(@RequestParam("id")String id,@RequestParam("type")String type) {
+		ProductDto dto = productRepository.findById(Long.parseLong(id)).map(ProductDto::new).orElseThrow(IllegalArgumentException::new);
+		return dto;
+	}
 
 	@SuppressWarnings("unchecked")
 	@PostMapping("/products")
-	public Result<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
+	public Result<ProductMainDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
 		// limit:8. skip:0. 0번째부터 8개 가져와.
 		int skip = (int)conditionBody.get("skip");
 		// limit값이 있으면 limit. 없으면 20
@@ -92,11 +99,12 @@ public class ProductController {
 //		Page<Product> page = productRepository.findAll(pageRequest);
 //		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
 //				.collect(Collectors.toList());
-		List<ProductDto> productList = productRepository.findAll().stream().map(ProductDto::new)
+		List<ProductMainDto> productList = productRepository.findAll().stream().map(ProductMainDto::new)
 				.collect(Collectors.toList());
 //		return new Result(productList,page.hasNext());
 		return new Result(productList,false);
 	}
+	
 //	@PostMapping("/products")
 //	public List<ProductDto> getProducts(@RequestBody Map<String, Object> conditionBody) {
 //		int limit = (int) conditionBody.get("limit");
@@ -107,9 +115,25 @@ public class ProductController {
 //				.collect(Collectors.toList());
 //		return productList;
 //	}
+	@Data
+	class ProductMainDto{
+		private String id;
+		private String title;
+		private List<String> imagePathList = new ArrayList<String>();
+		private String continent;
+		public ProductMainDto(Product product) {
+			this.id = String.valueOf(product.getProductId());
+			this.title = product.getTitle();
+			this.continent = product.getContinent().getName();
+			for(Image image : product.getImages()) {
+				imagePathList.add(image.getPath());
+			}
+		}
+	}
 
 	@Data
 	class ProductDto {
+		private String id;
 		private String title;
 		private String description;
 		private int price;
@@ -119,6 +143,7 @@ public class ProductController {
 		private List<String> imagePathList = new ArrayList<String>();
 
 		public ProductDto(Product product) {
+			this.id = String.valueOf(product.getProductId());
 			this.title = product.getTitle();
 			this.description = product.getDescription();
 			this.price = product.getPrice();
