@@ -20,10 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.domain.Continent;
-import com.shop.domain.IMAGE_TYPE;
 import com.shop.domain.Image;
 import com.shop.domain.Member;
 import com.shop.domain.Product;
+import com.shop.domain.enums.IMAGE_TYPE;
 
 @Transactional
 @SpringBootTest

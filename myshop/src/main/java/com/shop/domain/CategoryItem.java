@@ -10,30 +10,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.shop.domain.enums.IMAGE_TYPE;
-
-import lombok.Builder;
-import lombok.Getter;
-
-@Builder
-@Getter
-@Table(name ="image")
+@Table(name="category_item")
 @Entity
-public class Image {
+public class CategoryItem {
 	
-	@Column(name="image_id")
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long imagesId;
-	
-	private String path;
-	
-	private IMAGE_TYPE type;
+	@Column(name="category_item_id")
+	private Long categoryItem;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="product_id")
-	private Product product;
+	@JoinColumn(name = "item_id")
+	private Item item;
 	
-	protected void insertProduct(Product product) {
-		this.product = product;
-	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	private Category category;
 }

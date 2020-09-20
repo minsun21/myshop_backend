@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
 ---
 spring:
   profiles: prod
@@ -26,5 +26,12 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: create
+    database-platform: 
+    properties:
+      hibernate:
+       ddl-auto: create
+       format_sql: true
+       dialect : org.hibernate.dialect.SQLServerDialect
+logging.level:
+  org.hibernate.SQL: debug
+

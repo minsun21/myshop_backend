@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.shop.domain.Continent;
-import com.shop.domain.IMAGE_TYPE;
 import com.shop.domain.Image;
 import com.shop.domain.Member;
 import com.shop.domain.Product;
-import com.shop.domain.ROLE;
+import com.shop.domain.enums.IMAGE_TYPE;
+import com.shop.domain.enums.ROLE;
 import com.shop.repository.ContinentsRepository;
 import com.shop.repository.MemberRepository;
 import com.shop.repository.ProductRepository;
@@ -175,8 +175,9 @@ public class ProductController {
 		int price = Integer.parseInt((String) productBody.get("price"));
 		String con = String.valueOf(productBody.get("continent"));
 		Continent continent = continentsRepository.findById(Long.valueOf(con)).orElseThrow(() -> new Exception("없음"));
-		Member member = Member.builder().email("admin@admin.com").password("1234").name("adminUser")
-				.phone("010-1234-4321").role(ROLE.ADMIN).build();
+//		Member member = Member.builder().email("admin@admin.com").password("1234").name("adminUser")
+//				.phone("010-1234-4321").role(ROLE.ADMIN).build();
+		Member member = null;
 		Product product = Product.builder().member(member).title(productBody.get("title").toString())
 				.description(productBody.get("desc").toString()).price(price).continent(continent).build();
 		memberRepository.save(member);
