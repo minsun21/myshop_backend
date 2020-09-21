@@ -1,5 +1,6 @@
 package com.shop.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import lombok.Getter;
 @Getter
 @Table(name = "product")
 @Entity
-public class Product {
+public class TripProduct extends Item{
 	@Column(name = "product_id")
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productId;
@@ -43,6 +44,9 @@ public class Product {
 	private int sold;
 
 	private int views;
+	
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "continent_id")
@@ -54,7 +58,7 @@ public class Product {
 	}
 	
 	@Builder
-	public Product(Long productId, Member member, String title, String description, int price, int sold, int views,
+	public TripProduct(Long productId, Member member, String title, String description, int price, int sold, int views,
 			Continent continent) {
 		this.productId = productId;
 		this.member = member;

@@ -7,10 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.shop.domain.Continent;
-import com.shop.domain.Product;
+import com.shop.domain.TripProduct;
 
-public interface ProductRepository extends JpaRepository<Product, Long>{
+public interface TripProductRepository extends JpaRepository<TripProduct, Long>{
 //	Page<Product> findAll(Pageable pageable);
-	List<Product> findAll();
-	Page<Product> findByContinent(Continent continent, Pageable pageable);
+	List<TripProduct> findAll();
+//	Page<Product> findByContinent(Continent continent, Pageable pageable);
+	TripProduct findByContinent(Continent continent);
 }

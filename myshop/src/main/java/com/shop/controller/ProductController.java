@@ -6,16 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.aop.ThrowsAdvice;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.shop.domain.Continent;
 import com.shop.domain.Image;
 import com.shop.domain.Member;
-import com.shop.domain.Product;
+import com.shop.domain.TripProduct;
 import com.shop.domain.enums.IMAGE_TYPE;
-import com.shop.domain.enums.ROLE;
 import com.shop.repository.ContinentsRepository;
 import com.shop.repository.MemberRepository;
-import com.shop.repository.ProductRepository;
+import com.shop.repository.TripProductRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,7 +40,7 @@ public class ProductController {
 	private final String IMAGE_FOLDER = "src/main/resources/product/";
 
 	private final ContinentsRepository continentsRepository;
-	private final ProductRepository productRepository;
+	private final TripProductRepository tripProductRepository;
 	private final MemberRepository memberRepository;
 
 	@GetMapping(value = "/continents")
@@ -82,7 +77,7 @@ public class ProductController {
 	}
 	@GetMapping(value = "/products_by_id")
 	public ProductDto getProductById(@RequestParam("id")String id,@RequestParam("type")String type) {
-		ProductDto dto = productRepository.findById(Long.parseLong(id)).map(ProductDto::new).orElseThrow(IllegalArgumentException::new);
+		ProductDto dto = tripProductRepository.findById(Long.parseLong(id)).map(ProductDto::new).orElseThrow(IllegalArgumentException::new);
 		return dto;
 	}
 
@@ -99,7 +94,7 @@ public class ProductController {
 //		Page<Product> page = productRepository.findAll(pageRequest);
 //		List<ProductDto> productList = page.getContent().stream().map(ProductDto::new)
 //				.collect(Collectors.toList());
-		List<ProductMainDto> productList = productRepository.findAll().stream().map(ProductMainDto::new)
+		List<ProductMainDto> productList = tripProductRepository.findAll().stream().map(ProductMainDto::new)
 				.collect(Collectors.toList());
 //		return new Result(productList,page.hasNext());
 		return new Result(productList,false);
@@ -121,7 +116,7 @@ public class ProductController {
 		private String title;
 		private List<String> imagePathList = new ArrayList<String>();
 		private String continent;
-		public ProductMainDto(Product product) {
+		public ProductMainDto(TripProduct product) {
 			this.id = String.valueOf(product.getProductId());
 			this.title = product.getTitle();
 			this.continent = product.getContinent().getName();
@@ -142,7 +137,7 @@ public class ProductController {
 		private String continent;
 		private List<String> imagePathList = new ArrayList<String>();
 
-		public ProductDto(Product product) {
+		public ProductDto(TripProduct product) {
 			this.id = String.valueOf(product.getProductId());
 			this.title = product.getTitle();
 			this.description = product.getDescription();
@@ -178,14 +173,14 @@ public class ProductController {
 //		Member member = Member.builder().email("admin@admin.com").password("1234").name("adminUser")
 //				.phone("010-1234-4321").role(ROLE.ADMIN).build();
 		Member member = null;
-		Product product = Product.builder().member(member).title(productBody.get("title").toString())
+		TripProduct product = TripProduct.builder().member(member).title(productBody.get("title").toString())
 				.description(productBody.get("desc").toString()).price(price).continent(continent).build();
 		memberRepository.save(member);
 		List<String> imageArray = (ArrayList<String>) productBody.get("images");
 		for (String imagePath : imageArray) {
 			product.addImage((getImageInfo(imagePath)));
 		}
-		productRepository.save(product);
+		tripProductRepository.save(product);
 	
 		result.put("result", "success");
 		return result;

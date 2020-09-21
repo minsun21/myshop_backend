@@ -31,9 +31,9 @@ public class Image {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="product_id")
-	private Product product;
+	private TripProduct product;
 	
-	protected void insertProduct(Product product) {
+	protected void insertProduct(TripProduct product) {
 		this.product = product;
 	}
 }
